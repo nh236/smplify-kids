@@ -44,9 +44,6 @@ Follow instructions on https://github.com/vchoutas/torch-mesh-isect#installation
 for preprocessing:
 `pip install scikit-learn`
 
-
-
-### Dependencies
 This code was tested with Python3.8, pytorch3d 0.7.2 and pytorch 1.11.0+cu113
 
 Make sure the pytorch version matches the requirements of pytorch3d.
