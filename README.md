@@ -1,13 +1,23 @@
 # SMPLify-KiDS: Tracking <ins>K</ins>ids <ins>i</ins>n <ins>D</ins>epth <ins>S</ins>equences
 
-This repository contains code for fitting a human body model to RGB-D data, and is based on [SMPLify-X](https://github.com/vchoutas/smplify-x).
+This repository contains code for fitting a human body model to RGB-D data of humans of all sizes, and is based on [SMPLify-X](https://github.com/vchoutas/smplify-x).
 
+## Table of Contents
+  * [Installation](#installation)
+  * [License](#license)
+  * [Citation](#citation)
+  * [Contact](#contact)
+  * 
 
 ## Installation
+Create virtual environment
 ```
 python3.8 -m venv .venv
 source .venv/bin/activate
+```
 
+Install matching versions of pytorch3d and torch
+```
 # pytorch - need version matching that of pytorch3d
 # https://pytorch.org/get-started/previous-versions/
 pip install torch==1.11.0+cu113 torchvision==0.12.0+cu113 torchaudio==0.11.0 --extra-index-url https://download.pytorch.org/whl/cu113
@@ -16,49 +26,101 @@ pip install torch==1.11.0+cu113 torchvision==0.12.0+cu113 torchaudio==0.11.0 --e
 # dependencies
 pip install fvcore iopath
 pip install --no-index --no-cache-dir pytorch3d -f https://dl.fbaipublicfiles.com/pytorch3d/packaging/wheels/py38_cu113_pyt1110/download.html
-
-pip install trimesh
-follow instructions on https://github.com/MPI-IS/mesh to install the mesh package
-
-pip install smplx[all]
-
-https://github.com/vchoutas/torch-mesh-isect#installation
-might need to copy double_vec_ops.h from include folder to src folder
-
-for preprocessing:
-pip install scikit-learn
-
 ```
 
-### Dependencies
-pytorch 1.??.?- find sutiable version (CUDA) here:
-pytorch3D 0.?.? - needs to match pytorch version
+Additional dependencies
 
-torch-mesh-isect
+`pip install trimesh`
+
+Follow instructions on https://github.com/MPI-IS/mesh to install the mesh package
+
+Install the model package: `pip install smplx[all]`
+
+Self-intersection package (optional - set `interpenetration` to False in config file)
+
+Follow instructions on https://github.com/vchoutas/torch-mesh-isect#installation
+(you might need to copy `double_vec_ops.h` from `include` folder to `src` folder)
+
+for preprocessing:
+`pip install scikit-learn`
+
+
+
+### Dependencies
+This code was tested with Python3.8, pytorch3d 0.7.2 and pytorch 1.11.0+cu113
+
+Make sure the pytorch version matches the requirements of pytorch3d.
 
 ### Files
 
-Download SMPL-H from ... and place it in files/models
+Download SMPL-H from http://mano.is.tue.mpg.de/ and place it in files/models
 
-Download GMM prior from ... and place it in files/prior
+Download GMM prior from http://smplify.is.tue.mpg.de and place it in files/prior (see comment here: https://github.com/vchoutas/smplify-x/issues/51#issuecomment-544128577)
 
 Download smpl_segmentation.pkl from https://github.com/vchoutas/torch-mesh-isect#examples ("The file for the part_segm_fn argument for SMPL can be downloaded here.") and place it in files/models
 
 The final directory tree should look like this:
-...
-
-
+```
+smplify-kids
+├── cfg_files
+│   ├── fit_child_rgbd_smplh.yaml
+├── files
+│   ├── model_templates
+│   │   ├── smil_template_fingers_fix.ply
+│   ├── models
+│   │   ├── smplh
+│   │   │   ├── SMPLH_FEMALE.pkl
+│   │   │   ├── SMPLH_MALE.pkl
+│   │   ├── smpl_segmentation.pkl
+│   ├── prior
+│   │   ├── gmm_08.pkl
+│   ├── face_lm_vert_inds_SMPL_full_op_ordered.txt
+│   ├── smplh_footsoles.txt
+│   ├── smplh_vertex_weights_wrt_face_area.npy
+├── smplifyx
+│   ├── ...
+├── .gitignore
+├── LICENSE
+└── README.md
+```
 ### Data prepocessing
-1. record mkv
-2. unpack
-3. estimate keypoints
-4. segment person (with estimated ground plane)
+1. record mkv (e.g., using official recorder: https://learn.microsoft.com/en-us/azure/kinect-dk/azure-kinect-recorder)
+2. unpack, register (and downscale) RGB and depth images (code coming soon)
+3. estimate keypoints (e.g. Openpose: https://github.com/CMU-Perceptual-Computing-Lab/openpose).
+   If other method is used, make sure the keypoints are transformed to Openpose format.
+4. segment person (with estimated ground plane): run `python smplifyx/preprocess_data_k4a.py [-h] --data_folder DATA_FOLDER [--visualize]
+                              [--rotation {0,90,180,270}]`
+Expected folder structure to run fitting:
+  ```
+  data_folder
+  ├── downscaled
+  │   ├── cropped
+  │   │   ├── depth
+  │   │   ├── openpose
+  │   │   ├── rgb
+  │   │   ├── bg_plane.gre
+  │   │   ├── calib.txt
+  │   ├── depth
+  │   ├── rgb
+  │   ├── calib.txt
+  ├── openpose
+  ├── calib.txt
+  ├── recording.mkv
+```
+
 5. run fitting
+``` 
+python run_rgbd_fit.py [-h] --data_folder DATA_FOLDER --output_folder
+                       OUTPUT_FOLDER [--gender {female,male,neutral}]
+                       [--visualize] [--saveonly] [--rotation {0,90,180,270}]
 
-
-
-
-
+* data_folder: top folder containing all the data (see above)
+* output_folder: results are saved here
+* gender: which version of the model to use
+* visualize: display fitting (makes processing a bit slower)
+* saveonly: stores joint positions into separate file (if results exist for complete sequence)
+* rotation: if camera was rotated during recording, but sequence is processed so that the person is upright
+```
 
 
 
@@ -72,16 +134,7 @@ The final directory tree should look like this:
 
 ![SMPL-X Examples](./images/teaser_fig.png)
 
-## Table of Contents
-  * [License](#license)
-  * [Description](#description)
-    * [Fitting](#fitting)
-    * [Different Body Models](#different-body-models)
-    * [Visualizing Results](#visualizing-results)
-  * [Dependencies](#dependencies)
-  * [Citation](#citation)
-  * [Acknowledgments](#acknowledgments)
-  * [Contact](#contact)
+
 
 
 ## License
@@ -89,87 +142,22 @@ The final directory tree should look like this:
 Software Copyright License for **non-commercial scientific research purposes**.
 Please read carefully the [terms and conditions](https://github.com/vchoutas/smplx/blob/master/LICENSE) and any accompanying documentation before you download and/or use the SMPL-X/SMPLify-X model, data and software, (the "Model & Software"), including 3D meshes, blend weights, blend shapes, textures, software, scripts, and animations. By downloading and/or using the Model & Software (including downloading, cloning, installing, and any other use of this github repository), you acknowledge that you have read these terms and conditions, understand them, and agree to be bound by them. If you do not agree with these terms and conditions, you must not download and/or use the Model & Software. Any infringement of the terms of this agreement will automatically terminate your rights under this [License](./LICENSE).
 
-## Disclaimer
-
-The original images used for the figures 1 and 2 of the paper can be found in [this link](https://www.gettyimages.de/search/stack/546047069#). 
-The images in the paper are used under license from gettyimages.com.
-We have acquired the right to use them in the publication, but redistribution is not allowed.
-Please follow the instructions on the given link to acquire right of usage.
-Our results are obtained on the 483 × 724 pixels resolution of the original images.
-
-## Description
-
-This repository contains the fitting code used for the experiments in [Expressive Body Capture: 3D Hands, Face, and Body from a Single Image](https://smpl-x.is.tue.mpg.de/).
-
-### Fitting 
-Run the following command to execute the code:
-```Shell
-python smplifyx/main.py --config cfg_files/fit_smplx.yaml 
-    --data_folder DATA_FOLDER 
-    --output_folder OUTPUT_FOLDER 
-    --visualize="True/False"
-    --model_folder MODEL_FOLDER
-    --vposer_ckpt VPOSER_FOLDER
-    --part_segm_fn smplx_parts_segm.pkl
-```
-where the `DATA_FOLDER` should contain two subfolders, *images*, where the
-images are located, and *keypoints*, where the OpenPose output should be
-stored.
-
-### Different Body Models
-
-To fit [SMPL](http://smpl.is.tue.mpg.de/) or [SMPL+H](http://mano.is.tue.mpg.de), replace the *yaml* configuration file 
-with either *fit_smpl.yaml* or *fit_smplx.yaml*, i.e.:
- * for SMPL:
- ```Shell
- python smplifyx/main.py --config cfg_files/fit_smpl.yaml 
-    --data_folder DATA_FOLDER 
-    --output_folder OUTPUT_FOLDER 
-    --visualize="True/False"
-    --model_folder MODEL_FOLDER
-    --vposer_ckpt VPOSER_FOLDER
- ```
-  * for SMPL+H:
- ```Shell
- python smplifyx/main.py --config cfg_files/fit_smplh.yaml 
-    --data_folder DATA_FOLDER 
-    --output_folder OUTPUT_FOLDER 
-    --visualize="True/False"
-    --model_folder MODEL_FOLDER
-    --vposer_ckpt VPOSER_FOLDER
- ```
- 
-### Visualizing Results
-
-To visualize the results produced by the method you can run the following script:
-```Shell
-python smplifyx/render_results.py --mesh_fns OUTPUT_MESH_FOLDER
-```
-where *OUTPUT_MESH_FOLDER* is the folder that contains the resulting meshes.
-
-## Dependencies
-
-Follow the installation instructions for each of the following before using the
-fitting code.
-
-1. [PyTorch](https://pytorch.org/)
-2. [SMPL-X](https://github.com/vchoutas/smplx)
-3. [VPoser](https://github.com/nghorbani/HumanBodyPrior)
-4. [Homogenus](https://github.com/nghorbani/homogenus)
-
-### Optional Dependencies
-
-1. [PyTorch Mesh self-intersection](https://github.com/vchoutas/torch-mesh-isect) for interpenetration penalty 
-   * Download the per-triangle part segmentation [here](https://owncloud.tuebingen.mpg.de/index.php/s/MWnr8Kso4K8T8at)
-1. [Trimesh](https://trimsh.org/) for loading triangular meshes
-1. [Pyrender](https://pyrender.readthedocs.io/) for visualization
-
-The code has been tested with Python 3.6, CUDA 10.0, CuDNN 7.3 and PyTorch 1.0 on Ubuntu 18.04. 
-
 ## Citation
 
-If you find this Model & Software useful in your research we would kindly ask you to cite:
+If you find this Software useful in your research we would kindly ask you to cite:
+```
+@article{hesse2023smplifykids,
+  author={Hesse, Nikolas and Baumgartner, Sandra and Gut, Anja and Van Hedel, Hubertus J. A.},
+  journal={IEEE Transactions on Neural Systems and Rehabilitation Engineering},
+  title={Concurrent Validity of a Custom Method for Markerless 3D Full-Body Motion Tracking of Children and Young Adults based on a Single RGB-D Camera},
+  year={2023},
+  volume={},
+  number={},
+  pages={},
+  doi={10.1109/TNSRE.2023.3251440}}
+```
 
+This work is based on the SMPLify-X paper/repository:
 ```
 @inproceedings{SMPL-X:2019,
   title = {Expressive Body Capture: 3D Hands, Face, and Body from a Single Image},
@@ -179,18 +167,6 @@ If you find this Model & Software useful in your research we would kindly ask yo
 }
 ```
 
-## Acknowledgments
-
-### LBFGS with Strong Wolfe Line Search
-
-The LBFGS optimizer with Strong Wolfe Line search is taken from this [Pytorch pull request](https://github.com/pytorch/pytorch/pull/8824). Special thanks to 
-[Du Phan](https://github.com/fehiepsi) for implementing this. 
-We will update the repository once the pull request is merged.
 
 ## Contact
-The code of this repository was implemented by [Vassilis Choutas](vassilis.choutas@tuebingen.mpg.de) and
-[Georgios Pavlakos](pavlakos@seas.upenn.edu).
-
-For questions, please contact [smplx@tue.mpg.de](smplx@tue.mpg.de). 
-
-For commercial licensing (and all related questions for business applications), please contact [ps-licensing@tue.mpg.de](ps-licensing@tue.mpg.de).
+The modifications in this repository (with respect to SMPLify-X) wer implemented by [Nikolas Hesse](nikolas.hesse@kispi.uzh.ch)
