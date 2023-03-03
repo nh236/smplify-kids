@@ -1,13 +1,17 @@
 # SMPLify-KiDS: Tracking <ins>K</ins>ids <ins>i</ins>n <ins>D</ins>epth <ins>S</ins>equences
 
-This repository contains code for fitting a human body model to RGB-D data of humans of all sizes, and is based on [SMPLify-X](https://github.com/vchoutas/smplify-x).
+This repository contains code for fitting a human body model to RGB-D data of humans of all sizes, which was used in our paper:  
+N. Hesse, S. Baumgartner, A. Gut, H. J. A. van Hedel, "*Concurrent Validity of a Custom Method for Markerless 3D Full-Body Motion Tracking of Children and Young Adults based on a Single RGB-D Camera*", 
+which can be found [here](https://doi.org/10.1109/TNSRE.2023.3251440).
+
+
+The code in this repository is based on [SMPLify-X](https://github.com/vchoutas/smplify-x) and we would like to thank the authors for their amazing work!
 
 ## Table of Contents
   * [Installation](#installation)
   * [License](#license)
   * [Citation](#citation)
   * [Contact](#contact)
-  * 
 
 ## Installation
 Create virtual environment
@@ -107,7 +111,7 @@ Expected folder structure to run fitting:
 
 5. run fitting
 ``` 
-python run_rgbd_fit.py [-h] --data_folder DATA_FOLDER --output_folder
+python smplifyx/run_rgbd_fit.py [-h] --data_folder DATA_FOLDER --output_folder
                        OUTPUT_FOLDER [--gender {female,male,neutral}]
                        [--visualize] [--saveonly] [--rotation {0,90,180,270}]
 
@@ -120,28 +124,21 @@ python run_rgbd_fit.py [-h] --data_folder DATA_FOLDER --output_folder
 ```
 
 
-
-
-
-
-
-[[Project Page](https://smpl-x.is.tue.mpg.de/)] 
-[[Paper](https://ps.is.tuebingen.mpg.de/uploads_file/attachment/attachment/497/SMPL-X.pdf)]
-[[Supp. Mat.](https://ps.is.tuebingen.mpg.de/uploads_file/attachment/attachment/498/SMPL-X-supp.pdf)]
-
-![SMPL-X Examples](./images/teaser_fig.png)
-
-
-
+## Notes
+The code relies on the following assumptions. If you do not get expected results, please check if your data conforms to these assumptions.
+* We assume an Azure Kinect Developer Kit camera, but the code can be adapted to work with other cameras.
+* Only one person should be in camera view. If there is more than one person, make sure the predicted keypoints are consistent, so that first set of keypoints in each file always belong to the person of interest.
+* We assume a "clean" scene, with a person standing on a flat surface, so that it can be easily segmented from the scene. For more cluttered scenes, applying semantic segmentation algorithms can help, but we do not provide code for this.
+* We do not expect a specific initialization pose, but all body parts should be visible in the first frame.
 
 ## License
 
 Software Copyright License for **non-commercial scientific research purposes**.
-Please read carefully the [terms and conditions](https://github.com/vchoutas/smplx/blob/master/LICENSE) and any accompanying documentation before you download and/or use the SMPL-X/SMPLify-X model, data and software, (the "Model & Software"), including 3D meshes, blend weights, blend shapes, textures, software, scripts, and animations. By downloading and/or using the Model & Software (including downloading, cloning, installing, and any other use of this github repository), you acknowledge that you have read these terms and conditions, understand them, and agree to be bound by them. If you do not agree with these terms and conditions, you must not download and/or use the Model & Software. Any infringement of the terms of this agreement will automatically terminate your rights under this [License](./LICENSE).
+Please read carefully the [terms and conditions](https://github.com/nh236/smplify-kids/blob/main/LICENSE) and any accompanying documentation before you download and/or use the data and software. By downloading and/or using the software & data (including downloading, cloning, installing, and any other use of this github repository), you acknowledge that you have read these terms and conditions, understand them, and agree to be bound by them. If you do not agree with these terms and conditions, you must not download and/or use the software & data. Any infringement of the terms of this agreement will automatically terminate your rights under this [License](./LICENSE).
 
 ## Citation
 
-If you find this Software useful in your research we would kindly ask you to cite:
+If you find this repository useful in your research, please cite:
 ```
 @article{hesse2023smplifykids,
   author={Hesse, Nikolas and Baumgartner, Sandra and Gut, Anja and Van Hedel, Hubertus J. A.},
@@ -154,7 +151,7 @@ If you find this Software useful in your research we would kindly ask you to cit
   doi={10.1109/TNSRE.2023.3251440}}
 ```
 
-This work is based on the SMPLify-X paper/repository:
+This work is based on the [SMPLify-X](https://github.com/vchoutas/smplify-x) paper/repository:
 ```
 @inproceedings{SMPL-X:2019,
   title = {Expressive Body Capture: 3D Hands, Face, and Body from a Single Image},
@@ -166,4 +163,4 @@ This work is based on the SMPLify-X paper/repository:
 
 
 ## Contact
-The modifications in this repository (with respect to SMPLify-X) wer implemented by [Nikolas Hesse](nikolas.hesse@kispi.uzh.ch)
+The modifications in this repository (with respect to SMPLify-X) were implemented by [Nikolas Hesse](nikolas.hesse@kispi.uzh.ch), at [Swiss Children's Rehab](https://www.kispi.uzh.ch/kinder-reha), University Children's Hospital Zurich, Switzerland.
