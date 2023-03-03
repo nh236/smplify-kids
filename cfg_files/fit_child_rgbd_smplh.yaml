@@ -1,0 +1,107 @@
+gender: male
+rec_type: DEFAULT
+model_scale: 1.
+model_type: SMPLH
+image_width: 960
+image_height: 540
+rotation: 0
+pose_prior_type: gmm
+rho_close_plane: 0.02
+rho_j2d: 50
+rho_m2s: 0.03
+rho_s2m: 0.03
+rho_j2d_list:
+  - 500
+  - 50
+  - 4
+rho_m2s_list:
+  - 0.3
+  - 0.103
+  - 0.03
+rho_s2m_list:
+  - 0.3
+  - 0.1
+  - 0.03
+use_face: true
+use_face_contour: false
+use_hands: true
+use_m2s: True
+poseonly: True
+interpenetration: True
+df_cone_height: 0.0001
+every_nth_point: 1
+pts_inside_mesh_weight: 1.
+# Upper arms and Spine 2
+# Neck and jaw
+ign_part_pairs: ["9,16", "9,17", "6,16", "6,17", "1,2", "12,22", "9,13", "9,14"]
+penalize_outside: True
+max_collisions: 128
+weights:
+  bending_prior_weight:
+  - 1.0
+  - 1.0
+  - 0.1
+  body_pose_weight:
+  - 1.0
+  - 0.5
+  - 0.5
+  close_plane_weight:
+  - 0.0
+  - 0.0
+  - 5000.0
+  data_weight:
+  - 0.07
+  - 0.07
+  - 0.27
+  expr_prior_weight:
+  - 10.0
+  - 10.0
+  - 10.0
+  foot_m2s_weight:
+  - 1.0
+  - 1.0
+  - 1.0
+  hand_prior_weight:
+  - 1.0
+  - 1.0
+  - 0.1
+  hand_joints_weights:
+  - 0.0
+  - 0.1
+  - 1.0
+  inside_plane_weight:
+  - 10.0
+  - 10.0
+  - 1000000.
+  jaw_prior_weight:
+  - 10.0
+  - 10.0
+  - 10.0
+  m2s_weight:
+  - 0.0
+  - 0.0
+  - 100000.0
+  s2m_weight:
+  - 100000.0
+  - 200000.0
+  - 800000.0
+  shape_weight:
+  - 5.0
+  - 0.1
+  - 0.001
+  smooth_reg_weight:
+  - 1.0
+  - 1.0
+  - 1.0
+  tolerance:
+  - 0.001
+  - 0.0001
+  - 1.0e-05
+  trans_reg_weight:
+  - 10.0
+  - 100.0
+  - 100.0
+  coll_loss_weight:
+  - 0.0
+  - 0.0
+  - 0.01
