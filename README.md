@@ -25,7 +25,7 @@ source .venv/bin/activate
 
 #### Install matching versions of pytorch3d and torch  
 A list of prebuilt versions of pytorch3d can be found here: https://github.com/facebookresearch/pytorch3d/issues/1434#issue-1565285223
---> select pytorch3d version and then install the corresponding torch version 
+First select the pytorch3d version (that matches your Python and CUDA versions) and then install the corresponding torch version (that matches your CUDA version)
 
 pytorch (https://pytorch.org/get-started/previous-versions/)
 ```
