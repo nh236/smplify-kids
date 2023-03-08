@@ -14,25 +14,32 @@ The code in this repository is based on [SMPLify-X](https://github.com/vchoutas/
   * [Contact](#contact)
 
 ## Installation
-Create virtual environment
+This code was tested with Python3.10, pytorch0.7.2 and pytorch 1.12.1+cu113
+
+
+#### Create virtual environment
 ```
-python3.8 -m venv .venv
+python3.10 -m venv .venv
 source .venv/bin/activate
 ```
 
-Install matching versions of pytorch3d and torch
-```
-# pytorch - need version matching that of pytorch3d
-# https://pytorch.org/get-started/previous-versions/
-pip install torch==1.11.0+cu113 torchvision==0.12.0+cu113 torchaudio==0.11.0 --extra-index-url https://download.pytorch.org/whl/cu113
+#### Install matching versions of pytorch3d and torch  
+A list of prebuilt versions of pytorch3d can be found here: https://github.com/facebookresearch/pytorch3d/issues/1434#issue-1565285223
+--> select pytorch3d version and then install the corresponding torch version 
 
-# pytorch3d: https://github.com/facebookresearch/pytorch3d/blob/main/INSTALL.md
+pytorch (https://pytorch.org/get-started/previous-versions/)
+```
+pip install torch==1.12.1+cu113 torchvision==0.13.1+cu113 torchaudio==0.12.1 --extra-index-url https://download.pytorch.org/whl/cu113
+```
+
+pytorch3d (https://github.com/facebookresearch/pytorch3d/blob/main/INSTALL.md)
+```
 # dependencies
 pip install fvcore iopath
-pip install --no-index --no-cache-dir pytorch3d -f https://dl.fbaipublicfiles.com/pytorch3d/packaging/wheels/py38_cu113_pyt1110/download.html
+pip install --no-index --no-cache-dir pytorch3d -f https://dl.fbaipublicfiles.com/pytorch3d/packaging/wheels/py310_cu113_pyt1121/download.html
 ```
 
-Additional dependencies
+#### Additional dependencies
 
 `pip install trimesh`
 
@@ -40,17 +47,13 @@ Follow instructions on https://github.com/MPI-IS/mesh to install the mesh packag
 
 Install the model package: `pip install smplx[all]`
 
-Self-intersection package (optional - set `interpenetration` to False in config file)
+Self-intersection package (optional - if you don't want to use it set `interpenetration: False` in config file)
 
 Follow instructions on https://github.com/vchoutas/torch-mesh-isect#installation
 (you might need to copy `double_vec_ops.h` from `include` folder to `src` folder)
 
 for preprocessing:
 `pip install scikit-learn`
-
-This code was tested with Python3.8, pytorch3d 0.7.2 and pytorch 1.11.0+cu113
-
-Make sure the pytorch version matches the requirements of pytorch3d.
 
 ### Files
 
@@ -127,9 +130,10 @@ python smplifyx/run_rgbd_fit.py [-h] --data_folder DATA_FOLDER --output_folder
 ## Notes
 The code relies on the following assumptions. If you do not get expected results, please check if your data conforms to these assumptions.
 * We assume an Azure Kinect Developer Kit camera, but the code can be adapted to work with other cameras.
-* Only one person should be in camera view. If there is more than one person, make sure the predicted keypoints are consistent, so that first set of keypoints in each file always belong to the person of interest.
+* We recorded in NFOV unbinned mode, with color resolution of 1920x1080 and depth resolution of 640x576, using the official Azure Kinect recorder (https://learn.microsoft.com/en-us/azure/kinect-dk/azure-kinect-recorder).
+* Only one person should be in camera view. If there is more than one person, make sure that the first set of keypoints in each file always belongs to the person of interest.
 * We assume a "clean" scene, with a person standing on a flat surface, so that it can be easily segmented from the scene. For more cluttered scenes, applying semantic segmentation algorithms can help, but we do not provide code for this.
-* We do not expect a specific initialization pose, but all body parts should be visible in the first frame.
+* We do not expect the person to take a specific initialization pose, but all body parts should be visible in the first frame.
 
 ## License
 
