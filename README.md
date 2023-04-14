@@ -93,7 +93,7 @@ smplify-kids
 ```
 ### Data prepocessing
 1. record mkv (e.g., using official recorder: https://learn.microsoft.com/en-us/azure/kinect-dk/azure-kinect-recorder)
-2. unpack, register (and downscale) RGB and depth images (code coming soon)
+2. unpack, register (and downscale) RGB and depth images using https://github.com/nh236/k4a_extract_data
 3. estimate keypoints (e.g. Openpose: https://github.com/CMU-Perceptual-Computing-Lab/openpose).
    If other method is used, make sure the keypoints are transformed to Openpose format.
 4. segment person (with estimated ground plane): run `python smplifyx/preprocess_data_k4a.py [-h] --data_folder DATA_FOLDER [--visualize]
