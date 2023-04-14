@@ -1,7 +1,7 @@
 # SMPLify-KiDS: Tracking <ins>K</ins>ids <ins>i</ins>n <ins>D</ins>epth <ins>S</ins>equences
 
 <p float="center">
-  <img src="assets/teaser.gif" width="80%" />
+  <img src="assets/teaser.gif" width="50%" />
 </p>
 
 This repository contains code for fitting a human body model to RGB-D data of humans of all sizes, which was used in our paper:  
