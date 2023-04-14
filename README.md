@@ -1,5 +1,9 @@
 # SMPLify-KiDS: Tracking <ins>K</ins>ids <ins>i</ins>n <ins>D</ins>epth <ins>S</ins>equences
 
+<p float="center">
+  <img src="assets/teaser.gif" width="80%" />
+</p>
+
 This repository contains code for fitting a human body model to RGB-D data of humans of all sizes, which was used in our paper:  
 N. Hesse, S. Baumgartner, A. Gut, H. J. A. van Hedel, "*Concurrent Validity of a Custom Method for Markerless 3D Full-Body Motion Tracking of Children and Young Adults based on a Single RGB-D Camera*", 
 which can be found [here](https://doi.org/10.1109/TNSRE.2023.3251440).
