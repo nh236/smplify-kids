@@ -11,6 +11,10 @@ which can be found [here](https://doi.org/10.1109/TNSRE.2023.3251440).
 
 The code in this repository is based on [SMPLify-X](https://github.com/vchoutas/smplify-x) and we would like to thank the authors for their amazing work!
 
+## Updates
+* January 2024: added zip file containing sample data
+* April 2023: added repo for unpacking/preprocessing mkv recordings 
+
 ## Table of Contents
   * [Installation](#installation)
   * [License](#license)
